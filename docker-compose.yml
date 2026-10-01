@@ -1,0 +1,30 @@
+services:
+
+  mongodb:
+    image: mongo:8
+    container_name: student-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - student-mongo-data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: student-backend
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/student_management
+
+  frontend:
+    build: ./frontend
+    container_name: student-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  student-mongo-data:
